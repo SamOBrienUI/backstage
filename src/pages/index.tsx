@@ -1,8 +1,39 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import { Center, Title } from "@mantine/core";
+import { Alert, Button, Center, Container, Group, NumberInput, Table, Text, Title } from "@mantine/core";
+import React from "react";
+import { useCalculateDifference } from "@/hooks/useCalculateDifference";
+import { CalculationResult } from "@/types";
+import { CalculationHistoryTable } from "@/components/CalculationHistoryTable";
 
 export default function Home() {
+  // Local State
+  const [inputValue, setInputValue] = React.useState<number>(0);
+  const [isFetching, setIsFetching] = React.useState<boolean>(false); // Normally this would be handled by the hook, but for time I'm lifting it up here.
+  const [results, setResults] = React.useState<CalculationResult | undefined>(undefined);
+  const [error, setError] = React.useState<string | undefined>(undefined);
+
+  // API Calls
+  const { calculateDifference, calculationHistory } = useCalculateDifference();
+
+  // Event Handlers
+  const handleInputChange = (value: string | number) => {
+    setInputValue(Number(value));
+  }
+
+  const handleCalculateSumsAndSquares = () => {
+    setIsFetching(true);
+    calculateDifference(inputValue)
+      .then(result => {
+        setResults(result);
+        setIsFetching(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setIsFetching(false);
+      });
+  }
+
   return (
     <>
       <Head>
@@ -15,6 +46,30 @@ export default function Home() {
         <Center>
           <Title order={1}>Backstage Coding Challenge</Title>
         </Center>
+        {error != null && (
+          <Alert color="red" title="Error">
+            {error}
+          </Alert>
+        )}
+        <Group w='100%' justify="center">
+          <NumberInput
+            allowDecimal={false}
+            max={100}
+            min={0}
+            placeholder="Enter an integer from 0 - 100"
+            value={inputValue}
+            onChange={handleInputChange}
+          />
+          <Button loading={isFetching} onClick={handleCalculateSumsAndSquares}>Calculate</Button>
+        </Group>
+        <Container>
+          {results != null && (
+            <Center>
+              <Text>Results: {results.value}</Text>
+            </Center>
+          )}
+          <CalculationHistoryTable history={calculationHistory} />
+        </Container>
       </main>
     </>
   );
