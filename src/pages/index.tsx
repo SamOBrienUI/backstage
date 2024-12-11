@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "@/styles/Home.module.css";
-import { Alert, Button, Center, Container, Group, NumberInput, Table, Text, Title } from "@mantine/core";
+import { Alert, Button, Center, Container, Group, NumberInput, Text, Title } from "@mantine/core";
 import React from "react";
 import { useCalculateDifference } from "@/hooks/useCalculateDifference";
 import { CalculationResult } from "@/types";
