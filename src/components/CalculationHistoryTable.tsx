@@ -3,6 +3,10 @@ import { Table } from "@mantine/core";
 import { formatDateTime, formatNumber } from "@/formatters";
 
 export function CalculationHistoryTable({ history }: { history: CalculationHistory }) {
+  const sortedHistory = Object.entries(history).sort((a, b) => {
+    return new Date(b[1].datetime).getTime() - new Date(a[1].datetime).getTime();
+  });
+
   // Render
   return (
     <Table>
@@ -16,7 +20,7 @@ export function CalculationHistoryTable({ history }: { history: CalculationHisto
         </Table.Tr>
       </Table.Thead>
       <Table.Tbody>
-        {Object.entries(history).map(([key, value]) => {
+        {sortedHistory.map(([key, value]) => {
           return (
             <Table.Tr key={key}>
               <Table.Td>{value.number}</Table.Td>
