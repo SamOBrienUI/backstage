@@ -2,8 +2,8 @@ import { CalculationResult, CalculationHistory } from "@/types";
 import { useState } from "react";
 
 
-// Keep fetcher out of the hook so it's not recreated on every render
-async function fetchMockApi(input: number): Promise<CalculationResult> {
+// Keep fetcher out of the hook so it's not recreated on every render.
+export async function fetchCalculation(input: number): Promise<CalculationResult> {
   const response = await fetch('/api/calculate', {
     method: 'POST',
     body: JSON.stringify({ value: input }),
@@ -12,20 +12,20 @@ async function fetchMockApi(input: number): Promise<CalculationResult> {
     }
   });
 
-  try {
-    return response.json();
-  } catch {
+  if (!response.ok) {
     throw new Error('Failed to fetch data from the API');
-  };
+  }
+
+  return response.json();
 }
 
 export function useCalculateDifference() {
   // Local State
   const [cache, setCache] = useState<CalculationHistory>({});
 
-  // Function that fetches data from the API and updates the cache
+  // Function that runs the calculation through from the API and updates the cache
   const calculateDifference = async (input: number) => {
-    // If the entry already exists in the cache, update the occurrences and last_datetime fields, then bail out.
+    // If the entry already exists in the cache, update the necessary fields, then return the needed cache entry.
     if (cache[input]) {
       setCache((prevCache) => {
         return {
@@ -41,18 +41,17 @@ export function useCalculateDifference() {
       return cache[input];
     }
 
-    // Otherwise, we'll fetch the data from the API and add it to the cache.
-    const { datetime, value, number, occurrences, last_datetime } = await fetchMockApi(input);
-    const cacheEntry = { datetime, value, number, occurrences, last_datetime };
+    // Otherwise, we'll run the calculations on the API and add it to the cache.
+    const result = await fetchCalculation(input);
 
     setCache((prevCache) => {
       return {
         ...prevCache,
-        [input]: cacheEntry
+        [input]: result
       }
     });
 
-    return cacheEntry;
+    return result;
   }
 
   return {
