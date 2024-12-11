@@ -1,10 +1,8 @@
 import { CalculationHistory } from "@/types";
 import { Table } from "@mantine/core";
-import { formatDateTime } from "@/formatters/formatDateTime";
-import { formatNumber } from "@/formatters/formatNumber";
+import { formatDateTime, formatNumber } from "@/formatters";
 
 export function CalculationHistoryTable({ history }: { history: CalculationHistory }) {
-
   // Render
   return (
     <Table>

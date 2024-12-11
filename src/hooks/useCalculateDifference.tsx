@@ -23,7 +23,6 @@ export function useCalculateDifference() {
   // Local State
   const [cache, setCache] = useState<CalculationHistory>({});
 
-  // Function that runs the calculation through from the API and updates the cache
   const calculateDifference = async (input: number) => {
     // If the entry already exists in the cache, update the necessary fields, then return the needed cache entry.
     if (cache[input]) {

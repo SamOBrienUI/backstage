@@ -1,5 +1,4 @@
 import Head from "next/head";
-import styles from "@/styles/Home.module.css";
 import { Alert, Button, Center, Container, Group, NumberInput, Text, Title } from "@mantine/core";
 import React from "react";
 import { useCalculateDifference } from "@/hooks/useCalculateDifference";
@@ -42,8 +41,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.main}>
-        <Center>
+      <main>
+        <Center mb='xl'>
           <Title order={1}>Backstage Coding Challenge</Title>
         </Center>
         {error != null && (
@@ -51,7 +50,7 @@ export default function Home() {
             {error}
           </Alert>
         )}
-        <Group w='100%' justify="center">
+        <Group w='100%' justify="center" mb='xl'>
           <NumberInput
             allowDecimal={false}
             max={100}
@@ -65,7 +64,7 @@ export default function Home() {
         <Container>
           {results != null && (
             <Center>
-              <Text>Results: {results.value}</Text>
+              <Text>Result: {results.value}</Text>
             </Center>
           )}
           <CalculationHistoryTable history={calculationHistory} />
